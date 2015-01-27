@@ -43,7 +43,7 @@ shortcut = [
     ['f', 'Search    ', '快速搜索'],
     ['[', 'Prev song ', '上一曲'],
     [']', 'Next song ', '下一曲'],
-    [' ', 'Play/Pause', '播放/暂停'],
+    ['<enter>', 'Play/Pause', '播放/暂停'],
     ['?', 'Shuffle   ', '手气不错'],
     ['=', 'Volume+   ', '音量增加'],
     ['-', 'Volume-   ', '音量减少'],
@@ -153,13 +153,32 @@ class Menu:
                 self.index = (index+step)//step*step
 
             # 前进
-            elif key == ord('l') or key == 10:
-                if self.datatype == 'songs' or self.datatype == 'djchannels' or self.datatype == 'help':
+            elif key == ord('l') or key == ord(' ') or key == 10:
+                if self.datatype == 'help':
                     continue
-                self.ui.build_loading()
-                self.dispatch_enter(idx)
-                self.index = 0
-                self.offset = 0    
+                if self.datatype == 'songs' or self.datatype == 'djchannels':
+                    if key == 10 or key == ord(' '):
+                        if datatype == 'songs':
+                            self.presentsongs = ['songs', title, datalist, offset, index]
+                        elif datatype == 'djchannels':
+                            self.presentsongs = ['djchannels', title, datalist, offset, index]
+                        self.player.play(datatype, datalist, idx)
+                        time.sleep(0.1)
+                    continue
+                else:
+                    self.ui.build_loading()
+                    self.dispatch_enter(idx)
+                    self.index = 0
+                    self.offset = 0    
+
+            # 播放、暂停
+            elif key == 10:
+                if datatype == 'songs':
+                    self.presentsongs = ['songs', title, datalist, offset, index]
+                elif datatype == 'djchannels':
+                    self.presentsongs = ['djchannels', title, datalist, offset, index]
+                self.player.play(datatype, datalist, idx)
+                time.sleep(0.1)
 
             # 回退
             elif key == ord('h'):
@@ -208,15 +227,6 @@ class Menu:
                 if len(self.presentsongs) == 0:
                     continue
                 self.player.shuffle()
-                time.sleep(0.1)
-
-            # 播放、暂停
-            elif key == ord(' '):
-                if datatype == 'songs':
-                    self.presentsongs = ['songs', title, datalist, offset, index]
-                elif datatype == 'djchannels':
-                    self.presentsongs = ['djchannels', title, datalist, offset, index]
-                self.player.play(datatype, datalist, idx)
                 time.sleep(0.1)
 
             # 加载当前播放列表
