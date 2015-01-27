@@ -102,13 +102,7 @@ class Player:
                     self.recall()
         # if current menu is not song, pause/resume
         else:
-            if self.playing_flag:
-                if self.pause_flag:
-                    self.resume()
-                else:
-                    self.pause()
-            else:
-                pass
+            self.pausePlay()
 
     # play another   
     def switch(self):
@@ -116,6 +110,15 @@ class Player:
         # wait process be killed
         time.sleep(0.01)
         self.recall()
+
+    def pausePlay(self):
+        if self.playing_flag:
+            if self.pause_flag:
+                self.resume()
+            else:
+                self.pause()
+        else:
+            pass
 
     def stop(self):
         if self.playing_flag and self.popen_handler:

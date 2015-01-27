@@ -8,7 +8,7 @@
 
 import logging
 
-FILE_NAME = 'musicbox.log'
+FILE_NAME = '/tmp/musicbox.log'
 
 with open(FILE_NAME, 'a+') as f:
     f.write('#'*80)

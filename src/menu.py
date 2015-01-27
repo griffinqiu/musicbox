@@ -40,10 +40,10 @@ shortcut = [
     ['l', 'Forward   ', '前进'],
     ['u', 'Prev page ', '上一页'],
     ['d', 'Next page ', '下一页'],
-    ['f', 'Search    ', '快速搜索'],
+    ['/', 'Search    ', '快速搜索'],
     ['[', 'Prev song ', '上一曲'],
     [']', 'Next song ', '下一曲'],
-    ['<enter>', 'Play/Pause', '播放/暂停'],
+    [' ', 'Play/Pause', '播放/暂停'],
     ['?', 'Shuffle   ', '手气不错'],
     ['=', 'Volume+   ', '音量增加'],
     ['-', 'Volume-   ', '音量减少'],
@@ -55,7 +55,8 @@ shortcut = [
     ['c', 'Collection', '收藏列表'],
     ['r', 'Remove    ', '删除当前条目'],
     ['q', 'Quit      ', '退出'],
-    ["w", 'Quit&Clear', '退出并清除用户信息']
+    ["w", 'Quit&Clear', '退出并清除用户信息'],
+    ['<Enter>', 'OK',   '确定']
 ]
 
 log = logger.getLogger(__name__)
@@ -152,12 +153,15 @@ class Menu:
                 # e.g. 23 + 10 = 33 --> 30
                 self.index = (index+step)//step*step
 
-            # 前进
-            elif key == ord('l') or key == ord(' ') or key == 10:
+            # 播放、暂停
+            elif key == ord(' '):
+                self.player.pausePlay()
+            # 前进 
+            elif key == ord('l') or key == 10:
                 if self.datatype == 'help':
                     continue
                 if self.datatype == 'songs' or self.datatype == 'djchannels':
-                    if key == 10 or key == ord(' '):
+                    if key == 10:
                         if datatype == 'songs':
                             self.presentsongs = ['songs', title, datalist, offset, index]
                         elif datatype == 'djchannels':
@@ -172,13 +176,13 @@ class Menu:
                     self.offset = 0    
 
             # 播放、暂停
-            elif key == 10:
-                if datatype == 'songs':
-                    self.presentsongs = ['songs', title, datalist, offset, index]
-                elif datatype == 'djchannels':
-                    self.presentsongs = ['djchannels', title, datalist, offset, index]
-                self.player.play(datatype, datalist, idx)
-                time.sleep(0.1)
+            # elif key == 10:
+                # if datatype == 'songs':
+                    # self.presentsongs = ['songs', title, datalist, offset, index]
+                # elif datatype == 'djchannels':
+                    # self.presentsongs = ['djchannels', title, datalist, offset, index]
+                # self.player.play(datatype, datalist, idx)
+                # time.sleep(0.1)
 
             # 回退
             elif key == ord('h'):
@@ -193,7 +197,7 @@ class Menu:
                 self.index = up[4]
 
             # 搜索
-            elif key == ord('f'):
+            elif key == ord('/'):
                 self.search()
 
             # 播放下一曲
